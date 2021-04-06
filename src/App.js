@@ -1,23 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+import react, {useEffect, useState} from 'react';
+import './style.scss';
+import axios from 'axios';
 
-function App() {
+const App = () => {
+  const [quote, allQuote] = useState('');
+
+  useEffect(() => {
+    fetchQuote();
+  }, []);
+
+  const fetchQuote = () => {
+    axios
+    .get('https://goquotes-api.herokuapp.com/api/v1/random?count=1')
+    .then(res => allQuote(res.data.quotes[0]))
+  }
+  
+  const tweetUrl = "https://www.twitter.com/intent/tweet?text=" + quote.text + "-" + quote.author
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div id="quote-box">
+        <div className="quote">
+          <p id="text">
+            {quote.text} 
+          </p>
+          <h5 id="author">
+            - {quote.author}
+          </h5>
+        </div>
+        
+        <div className="buttons"> 
+          <a id="tweet-quote" className="button" href={tweetUrl} target="_blank" title="Tweet this quote!" rel="noreferrer"> Tweet this quote &nbsp;
+            <i className="fa fa-twitter"></i>
+          </a>
+
+          <button id="new-quote" className="button" onClick={fetchQuote}>
+            New Quote
+          </button>
+        </div>
+
+        
+      </div>
     </div>
   );
 }
